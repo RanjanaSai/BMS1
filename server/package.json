@@ -19,7 +19,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "react-scripts start"
   },
   "keywords": [],
   "author": "",
