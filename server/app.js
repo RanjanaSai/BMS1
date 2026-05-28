@@ -17,7 +17,14 @@ require('dotenv').config();// load the environment variables
 connectDB(process.env.DB_URL);
 
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT;
+app.use(
+    cors({
+        origin: "*",
+        methods: ["*"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+    })
+);
 
 // const apiLimiter = rateLimit({
 //     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -27,9 +34,15 @@ const PORT = 8080;
 
 //app.use(mongoSanitize());
 
+
+const clientBuildPath = path.join(__dirname, "../client/build");
+console.log(clientBuildPath);
+app.use(express.static(clientBuildPath));
+
+
 app.use(helmet());
 app.use(express.json());//parse incoming json request
-app.use(cors());// allowing CORS requests
+//app.use(cors());// allowing CORS requests
 
 
 //apply rate limiter middleware
@@ -41,8 +54,10 @@ app.use('/api/theatre', theatreRoute);
 app.use('/api/show', showRoute);
 app.use('/api/booking', bookRoute);
 
-
+app.get("*", (req, res) => {
+    res.sendFile(path.join(clientBuildPath, "index.html"));
+});
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log("Server is running on port ", port);
 });
